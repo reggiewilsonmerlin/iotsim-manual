@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#00D4FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IOTSIM Manual">
+<meta name="description" content="IOTSIM Complete User Manual — Infinite Outcome Trade Simulator reference">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon192.png">
+<link rel="icon" href="./icon192.png">
+<title>IOTSIM Complete User Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/theme.css">
+</head>
+<body>
+<div id="app">
+<aside id="sidebar">
+  <div class="hdr">
+    <h1>IOTSIM</h1>
+    <div class="sub">COMPLETE USER MANUAL</div>
+  </div>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search the manual…" autocomplete="off" spellcheck="false">
+    <button class="search-clear" id="sx" onclick="clearSearch()" title="Clear">✕</button>
+  </div>
+  <div id="nav"></div>
+  <div class="ft">© Reggie_W 2026+</div>
+</aside>
+
+<button id="mt" onclick="toggleMobileNav()">☰</button>
+<div id="mo" onclick="if(event.target.id==='mo')closeMobileNav()"></div>
+
+<main id="ct"><div id="ct-inner"></div></main>
+</div>
+
+<div id="ib">
+  <span style="color:var(--text);font-size:13px;margin-right:8px">📲 Install for offline access</span>
+  <button onclick="doInstall()" style="background:var(--accent);color:#000;border:none;padding:9px 22px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer">Install</button>
+  <button onclick="document.getElementById('ib').classList.remove('show')" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:12px;margin-left:10px">Not now</button>
+</div>
+
+<script src="./assets/interactions.js"></script>
+<script>
+// ─── Navigation tree (populated after content loads) ────────────
+const NAV = [
+  {kind:"part",title:"Front Matter",items:[
+    {id:"prologue",label:"Prologue"},
+    {id:"intro",label:"Foundations"},
+  ]},
+  {kind:"part",title:"Part 1 — Settings Reference",items:[
+    {kind:"group",label:"Core Configuration (1–5)",items:[
+      {id:"g1",label:"1. Insight Monitor & Output"},
+      {id:"g2",label:"2. Chart View: Quick Switches"},
+      {id:"g3",label:"3. Live Detection & Backtest"},
+      {id:"g4",label:"4. Account & Risk Profiling"},
+      {id:"g5",label:"5. Global Trade Management"},
+    ]},
+    {kind:"group",label:"Long Setup (6–16)",items:[
+      {id:"g6",label:"6. Core Entry"},
+      {id:"g7",label:"7. Core Targets"},
+      {id:"g8",label:"8. Target PD Arrays"},
+      {id:"g9",label:"9. Partial Profits"},
+      {id:"g10",label:"10. Partial PD Arrays"},
+      {id:"g11",label:"11. Core Stop Loss"},
+      {id:"g12",label:"12. SL PD Arrays"},
+      {id:"g13",label:"13. Target Modifiers"},
+      {id:"g14",label:"14. SL Modifiers"},
+      {id:"g15",label:"15. Trend & Filters"},
+      {id:"g16",label:"16. Model Specific"},
+    ]},
+    {kind:"group",label:"Short Setup (17–27)",items:[
+      {id:"g17",label:"17. Core Entry"},
+      {id:"g18",label:"18. Core Targets"},
+      {id:"g19",label:"19. Target PD Arrays"},
+      {id:"g20",label:"20. Partial Profits"},
+      {id:"g21",label:"21. Partial PD Arrays"},
+      {id:"g22",label:"22. Core Stop Loss"},
+      {id:"g23",label:"23. SL PD Arrays"},
+      {id:"g24",label:"24. Target Modifiers"},
+      {id:"g25",label:"25. SL Modifiers"},
+      {id:"g26",label:"26. Trend & Filters"},
+      {id:"g27",label:"27. Model Specific"},
+    ]},
+    {kind:"group",label:"Filters (28–30)",items:[
+      {id:"g28",label:"28. Dollar & Tick Filters"},
+      {id:"g29",label:"29. ICT Killzones"},
+      {id:"g30",label:"30. ICT Macros"},
+    ]},
+    {kind:"group",label:"Monitor Visuals (31–32)",items:[
+      {id:"g31",label:"31. Visuals: Insight Monitor"},
+      {id:"g32",label:"32. Monitor Row Selection"},
+    ]},
+    {kind:"group",label:"Chart Visuals (33–41)",items:[
+      {id:"g33",label:"33. Trend & Structure"},
+      {id:"g34",label:"34. Fair Value Gaps"},
+      {id:"g35",label:"35. Inversion FVGs"},
+      {id:"g36",label:"36. Order Blocks"},
+      {id:"g37",label:"37. Breaker Blocks"},
+      {id:"g38",label:"38. Wickless & Tailless"},
+      {id:"g39",label:"39. Swing BSL/SSL"},
+      {id:"g40",label:"40. HTF IPDA"},
+      {id:"g41",label:"41. HTF Arrays"},
+    ]},
+    {kind:"group",label:"Trade Visuals & System (42–45)",items:[
+      {id:"g42",label:"42. Trade Labels & Rays"},
+      {id:"g43",label:"43. Visibility Limits"},
+      {id:"g44",label:"44. Custom Date Range"},
+      {id:"g45",label:"45. System & Alerts"},
+    ]},
+  ]},
+  {kind:"part",title:"Part 2 — Insight Monitor",items:[
+    {id:"part2-intro",label:"Intro"},
+    {id:"part2-fullstats",label:"Ch.A — Full Stats"},
+    {id:"part2-overview",label:"Ch.B — Overview"},
+    {id:"part2-dayanalysis",label:"Ch.C — Day Analysis"},
+    {id:"part2-houranalysis",label:"Ch.D — Hour Analysis"},
+    {id:"part2-recenttrades",label:"Ch.E — Recent Trades"},
+    {id:"part2-modelleaderboard",label:"Ch.F — Model Leaderboard"},
+  ]},
+  {kind:"part",title:"Part 3 — Workflows",items:[
+    {id:"part3-intro",label:"Intro"},
+    {id:"part3-a-baseline",label:"Ch.A — Baseline Workflow"},
+    {id:"part3-b-directiontuning",label:"Ch.B — Direction Tuning"},
+    {id:"part3-c-filterlayering",label:"Ch.C — Filter Layering"},
+    {id:"part3-d-modelpruning",label:"Ch.D — Model Pruning"},
+    {id:"part3-e-troubleshooting",label:"Ch.E — PF Troubleshooting"},
+  ]},
+  {kind:"part",title:"Part 4 — FAQ & Troubleshooting",items:[
+    {id:"part4-intro",label:"Intro"},
+    {id:"part4-a-flowcharts",label:"Ch.A — Flowcharts"},
+    {id:"part4-b-errors",label:"Ch.B — Errors & Warnings"},
+    {id:"part4-c-faq-general",label:"Ch.C — FAQ: General"},
+    {id:"part4-d-faq-config",label:"Ch.D — FAQ: Config"},
+    {id:"part4-e-faq-stats",label:"Ch.E — FAQ: Statistics"},
+    {id:"part4-f-faq-technical",label:"Ch.F — FAQ: Technical"},
+  ]},
+  {kind:"part",title:"Appendices",items:[
+    {id:"appendix-emoji-key",label:"Emoji Key"},
+    {id:"appendix-base-setups",label:"Base Setups (Asset Presets)"},
+    {id:"appendix-insight-optimisation",label:"Insight Monitor Optimisation"},
+    {id:"appendix-life-hacks",label:"Life Hacks"},
+  ]},
+  {kind:"part",title:"Reference",items:[
+    {id:"glossary",label:"Glossary"},
+    {id:"index",label:"Index"},
+  ]},
+];
+
+const FLAT_ORDER = [];
+const LABEL_BY_ID = {};
+(function flatten(nav){
+  for(const p of nav) for(const it of (p.items||[])){
+    if(it.items) flatten([it]);
+    else if(it.id){ FLAT_ORDER.push(it.id); LABEL_BY_ID[it.id] = it.label; }
+  }
+})(NAV);
+
+let DATA = null;
+let CURRENT_ID = null;
+const OPEN_GROUPS = new Set(["Core Configuration (1–5)"]);
+
+function buildNav(target){
+  target = target || document.getElementById("nav");
+  target.innerHTML = "";
+  for(const part of NAV){
+    const hdr = document.createElement("div");
+    hdr.className = "nav-part"; hdr.textContent = part.title;
+    target.appendChild(hdr);
+    for(const item of part.items){
+      if(item.items){
+        const g = document.createElement("div");
+        g.className = "nav-group" + (OPEN_GROUPS.has(item.label) ? " open" : "");
+        const head = document.createElement("div");
+        head.className = "nav-group-head";
+        head.innerHTML = `<span class="chev">▶</span><span class="nm">${item.label}</span>`;
+        head.onclick = () => {
+          if(OPEN_GROUPS.has(item.label)) OPEN_GROUPS.delete(item.label);
+          else OPEN_GROUPS.add(item.label);
+          buildNav();
+        };
+        const body = document.createElement("div");
+        body.className = "nav-group-body";
+        for(const sub of item.items){
+          const a = document.createElement("a");
+          a.className = "nav-item" + (sub.id === CURRENT_ID ? " on" : "");
+          a.textContent = sub.label;
+          a.onclick = () => go(sub.id);
+          body.appendChild(a);
+        }
+        g.appendChild(head); g.appendChild(body);
+        target.appendChild(g);
+      } else {
+        const a = document.createElement("a");
+        a.className = "nav-single" + (item.id === CURRENT_ID ? " on" : "");
+        a.textContent = item.label;
+        a.onclick = () => go(item.id);
+        target.appendChild(a);
+      }
+    }
+  }
+}
+window.buildNav = buildNav;
+
+function openParentOf(id){
+  for(const p of NAV) for(const item of p.items)
+    if(item.items && item.items.some(x => x.id === id))
+      OPEN_GROUPS.add(item.label);
+}
+
+function toggleMobileNav(){
+  const mo = document.getElementById("mo");
+  if(mo.classList.contains("show")){ mo.classList.remove("show"); return; }
+  const sb = document.createElement("aside");
+  sb.id = "sidebar";
+  sb.innerHTML = `<div class="hdr"><h1>IOTSIM</h1><div class="sub">COMPLETE USER MANUAL</div></div><div id="nav-m"></div>`;
+  mo.innerHTML = ""; mo.appendChild(sb);
+  buildNav(sb.querySelector("#nav-m"));
+  mo.classList.add("show");
+}
+function closeMobileNav(){ document.getElementById("mo").classList.remove("show"); }
+
+function go(id, anchor){
+  if(!DATA || !DATA[id]){
+    document.getElementById("ct-inner").innerHTML = `<div style="padding:40px 0;color:var(--dim);font-style:italic">Chapter "${id}" not found in content.</div>`;
+    return;
+  }
+  CURRENT_ID = id;
+  openParentOf(id);
+  buildNav();
+  document.getElementById("ct-inner").innerHTML = DATA[id];
+  // Prev/Next
+  const idx = FLAT_ORDER.indexOf(id);
+  if(idx >= 0){
+    const prev = idx > 0 ? FLAT_ORDER[idx - 1] : null;
+    const next = idx < FLAT_ORDER.length - 1 ? FLAT_ORDER[idx + 1] : null;
+    const nb = document.createElement("div"); nb.className = "nb";
+    const pLbl = prev ? (LABEL_BY_ID[prev] || prev) : "";
+    const nLbl = next ? (LABEL_BY_ID[next] || next) : "";
+    nb.innerHTML = `${prev ? `<a class="bn" onclick="go('${prev}')">← ${pLbl}</a>` : `<span></span>`}${next ? `<a class="bn nx" onclick="go('${next}')">${nLbl} →</a>` : `<span></span>`}`;
+    document.getElementById("ct-inner").appendChild(nb);
+  }
+  // Scroll to top
+  document.getElementById("ct").scrollTop = 0;
+  history.replaceState(null, "", "#" + id);
+  closeMobileNav();
+  // Execute any <script> tags injected by the chapter (needed for widget registration)
+  document.getElementById("ct-inner").querySelectorAll("script").forEach(s => {
+    const ns = document.createElement("script");
+    if(s.src) ns.src = s.src;
+    else ns.textContent = s.textContent;
+    s.parentNode.replaceChild(ns, s);
+  });
+  // Run calc if present
+  if(document.getElementById("calc-margin")) updateCalc();
+  if(document.getElementById("alert-template")) updateAlertTemplate();
+}
+window.go = go;
+
+// ─── Search ──────────────────────────────────────────────
+function runSearch(q){
+  if(!DATA) return;
+  q = (q||"").trim().toLowerCase();
+  const navEl = document.getElementById("nav");
+  const sx = document.getElementById("sx");
+  if(!q){
+    window.SEARCH_MODE = false;
+    sx.classList.remove("show");
+    buildNav();
+    return;
+  }
+  window.SEARCH_MODE = true;
+  sx.classList.add("show");
+
+  // Strip HTML from chapter content for searching
+  const tmpEl = document.createElement("div");
+  const hits = [];
+  for(const id of Object.keys(DATA)){
+    tmpEl.innerHTML = DATA[id];
+    const text = tmpEl.textContent || "";
+    const idx = text.toLowerCase().indexOf(q);
+    if(idx >= 0){
+      const start = Math.max(0, idx - 40);
+      const end = Math.min(text.length, idx + q.length + 80);
+      let snippet = text.slice(start, end);
+      if(start > 0) snippet = "…" + snippet;
+      if(end < text.length) snippet = snippet + "…";
+      hits.push({id, title: LABEL_BY_ID[id] || id, snippet});
+    }
+  }
+
+  navEl.innerHTML = "";
+  if(hits.length === 0){
+    const e = document.createElement("div");
+    e.className = "search-empty";
+    e.innerHTML = `No results for <b>"${escapeHtml(q)}"</b>`;
+    navEl.appendChild(e);
+    return;
+  }
+  const cnt = document.createElement("div");
+  cnt.className = "search-count";
+  cnt.textContent = `${hits.length} match${hits.length === 1 ? "" : "es"}`;
+  navEl.appendChild(cnt);
+
+  const wrap = document.createElement("div");
+  wrap.className = "search-results";
+  const re = new RegExp(escapeRegex(q), "ig");
+  for(const h of hits.slice(0, 50)){
+    const r = document.createElement("div");
+    r.className = "search-result";
+    const safe = escapeHtml(h.snippet).replace(re, m => `<mark>${m}</mark>`);
+    r.innerHTML = `<div class="title">${escapeHtml(h.title)}</div><div class="ctx">${safe}</div>`;
+    r.onclick = () => go(h.id);
+    wrap.appendChild(r);
+  }
+  navEl.appendChild(wrap);
+}
+
+// ─── PWA install ─────────────────────────────────────────
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredPrompt = e; document.getElementById("ib").classList.add("show"); });
+function doInstall(){ if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt = null; document.getElementById("ib").classList.remove("show"); }}
+window.doInstall = doInstall;
+
+// ─── Init ───────────────────────────────────────────────
+(async function init(){
+  if("serviceWorker" in navigator){
+    try{ await navigator.serviceWorker.register("./sw.js"); }catch(e){}
+  }
+  try{
+    const res = await fetch("./content.json");
+    const json = await res.json();
+    DATA = json;
+  } catch(e){
+    document.getElementById("ct-inner").innerHTML = `<div style="padding:40px 0;color:var(--red)">Failed to load content.</div>`;
+    return;
+  }
+  buildNav();
+  const searchInput = document.getElementById("search");
+  searchInput.addEventListener("input", e => runSearchDebounced(e.target.value));
+  searchInput.addEventListener("keydown", e => { if(e.key === "Escape"){ clearSearch(); searchInput.blur(); }});
+
+  let initialId = "prologue";
+  if(location.hash){
+    const h = location.hash.slice(1);
+    if(DATA[h]) initialId = h;
+  }
+  go(initialId);
+
+  // Listen for URL hash changes (back/forward buttons, deep-links)
+  window.addEventListener("hashchange", () => {
+    const h = location.hash.slice(1);
+    if(h && DATA[h] && h !== CURRENT_ID) go(h);
+  });
+})();
+
+// Override runSearch in interactions.js global
+window.runSearch = runSearch;
+</script>
+</body>
+</html>

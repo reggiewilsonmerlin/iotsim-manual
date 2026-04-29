@@ -1,0 +1,14 @@
+{
+  "name": "IOTSIM Complete User Manual",
+  "short_name": "IOTSIM Manual",
+  "description": "Infinite Outcome Trade Simulator & Insight Monitor — Complete User Manual",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0c10",
+  "theme_color": "#00D4FF",
+  "orientation": "any",
+  "icons": [
+    { "src": "icon192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
